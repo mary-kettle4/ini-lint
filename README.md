@@ -64,7 +64,36 @@ config.ini:9:1: error: section header is missing its closing "]" [unclosed-secti
   | ^
 ```
 
-## rules in this first version
+## quoted and multi-line values
+
+A value can be wrapped in double or single quotes to keep leading/trailing
+whitespace that would otherwise be trimmed:
+
+```ini
+greeting = "  hello, world  "
+path = 'C:\tools\bin'
+```
+
+Double-quoted values understand the usual escape sequences (`\n`, `\t`,
+`\r`, `\\`, `\"`, `\0`); single-quoted values are taken literally, which
+makes them a better fit for paths and anything else full of backslashes.
+An unterminated quote is reported as `unterminated-quoted-value`.
+
+An unquoted value can also span several lines: any line indented further
+than the key it belongs to is folded into the value, joined with `\n`.
+
+```ini
+[server]
+motd = welcome to the server
+       please read the rules
+       before you say anything
+```
+
+`motd` above parses as `"welcome to the server\nplease read the rules\nbefore you say anything"`.
+Continuation stops at a blank line, a line indented no further than the
+key, a comment, or a new section header.
+
+## rules
 
 | rule | severity |
 | --- | --- |
@@ -74,7 +103,10 @@ config.ini:9:1: error: section header is missing its closing "]" [unclosed-secti
 | `empty-section-name` | error |
 | `empty-key` | error |
 | `malformed-line` | error |
+| `unterminated-quoted-value` | error |
 | `trailing-content-after-section` | warning |
+| `trailing-content-after-value` | warning |
+| `unknown-escape-sequence` | warning |
 | `trailing-whitespace` | warning |
 
 ## library use
@@ -91,5 +123,6 @@ mid-line. See the roadmap for where this is headed next.
 
 ## status
 
-First working version. No config file for enabling/disabling rules yet, and
-no support for quoted values or multi-line values.
+Quoted and multi-line values are supported. No config file for
+enabling/disabling rules yet, and no inline-comment handling after an
+unquoted value.

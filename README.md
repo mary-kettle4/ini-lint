@@ -109,10 +109,30 @@ key, a comment, or a new section header.
 | `unknown-escape-sequence` | warning |
 | `trailing-whitespace` | warning |
 
+## config file
+
+Rules can be turned off or have their severity changed with a
+`.ini-lintrc.json` file in the directory `ini-lint` is run from (or pass one
+explicitly with `--config <path>`):
+
+```json
+{
+  "rules": {
+    "trailing-whitespace": "off",
+    "unknown-escape-sequence": "error"
+  }
+}
+```
+
+Each rule accepts `"off"`, `"warning"`, or `"error"`. Rules not listed keep
+their default severity from the table above. An unknown rule name or an
+invalid setting is treated as a config error and stops the run.
+
 ## library use
 
-`src/lint.ts` exports `lint(text: string): Finding[]` independently of the
-CLI, so it can be run against in-memory strings (for example, in a test or an
+`src/lint.ts` exports `lint(text: string, config?: Config): Finding[]`
+independently of the CLI, so it can be run against in-memory strings (for
+example, in a test or an
 editor plugin) without touching the filesystem.
 
 ## known limitations
@@ -123,6 +143,6 @@ mid-line. See the roadmap for where this is headed next.
 
 ## status
 
-Quoted and multi-line values are supported. No config file for
-enabling/disabling rules yet, and no inline-comment handling after an
-unquoted value.
+Quoted and multi-line values are supported, and rules can be configured via
+`.ini-lintrc.json`. No test suite yet, and no inline-comment handling after
+an unquoted value.

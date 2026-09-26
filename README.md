@@ -141,8 +141,21 @@ Inline comments after a value (`key = value ; note`) are treated as part of
 the value, since not every INI dialect agrees that `;` starts a comment
 mid-line. See the roadmap for where this is headed next.
 
+## testing
+
+`src/lint.test.ts` covers each rule in the table above, plus the config
+overrides. It uses Node's built-in test runner, so there's nothing to
+install:
+
+```
+npm run test
+```
+
+which compiles with `tsc` and then runs everything under `dist` with
+`node --test`.
+
 ## status
 
-Quoted and multi-line values are supported, and rules can be configured via
-`.ini-lintrc.json`. No test suite yet, and no inline-comment handling after
-an unquoted value.
+Quoted and multi-line values are supported, rules can be configured via
+`.ini-lintrc.json`, and every rule has a test. No inline-comment handling
+after an unquoted value yet.

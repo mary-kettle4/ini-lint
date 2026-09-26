@@ -10,7 +10,8 @@
   "main": "dist/lint.js",
   "types": "dist/lint.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "tsc && node --test dist"
   },
   "engines": {
     "node": ">=18"
